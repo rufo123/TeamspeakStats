@@ -1,4 +1,3 @@
-using TeamspeakStatsNew;
 using TeamspeakStatsNew.Backend;
 
 var builder = WebApplication.CreateBuilder(args);

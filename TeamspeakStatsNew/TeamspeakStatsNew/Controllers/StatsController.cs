@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TeamspeakStatsNew.Backend;
 
 namespace TeamspeakStatsNew.Controllers
