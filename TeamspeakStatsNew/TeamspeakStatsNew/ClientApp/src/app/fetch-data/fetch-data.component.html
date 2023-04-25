@@ -1,27 +1,29 @@
 <p>TeamSpeak stats for RFTS by @rufo123.</p>
 
-<p *ngIf="!stats$"><em>Loading...</em></p>
+<p *ngIf="!stats$">
+  <em>Loading...</em>
+</p>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="stats$">
+<table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
   <thead>
-    <tr>
-      <th (click)="sort('id', stats)">
-        Id
-        <mat-icon>{{ getSortIcon('id') }}</mat-icon>
-      </th>
-      <th (click)="sort('latestName', stats)">
-        Name
-        <mat-icon>{{ getSortIcon('latestName') }}</mat-icon>
-      </th>
-      <th (click)="sort('lastConnected', stats)">
-        Last Connected
-        <mat-icon>{{ getSortIcon('lastConnected') }}</mat-icon>
-      </th>
-      <th (click)="sort('hoursTotal', stats)">
-        Hours Total
-        <mat-icon>{{ getSortIcon('hoursTotal') }}</mat-icon>
-      </th>
-    </tr>
+  <tr>
+    <th (click)="sort('id', stats)">
+      Id
+      <mat-icon>{{ getSortIcon('id') }}</mat-icon>
+    </th>
+    <th (click)="sort('latestName', stats)">
+      Name
+      <mat-icon>{{ getSortIcon('latestName') }}</mat-icon>
+    </th>
+    <th (click)="sort('lastConnected', stats)">
+      Last Connected
+      <mat-icon>{{ getSortIcon('lastConnected') }}</mat-icon>
+    </th>
+    <th (click)="sort('hoursTotal', stats)">
+      Hours Total
+      <mat-icon>{{ getSortIcon('hoursTotal') }}</mat-icon>
+    </th>
+  </tr>
   </thead>
   <tbody>
   <tr *ngFor="let stat of stats$ | async; trackBy: trackByFn" [ngClass]="{'online': stat.online}">

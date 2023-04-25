@@ -3,3 +3,11 @@
 ################################################################################
 
 /.vs
+/TeamspeakStats/bin
+/TeamspeakStats/ClientApp/.angular/cache/14.2.11/angular-webpack/3cac130ceec5d40bd7f3e4da900737a100e49f07
+/TeamspeakStats/ClientApp/dist
+/TeamspeakStats/ClientApp/node_modules
+/TeamspeakStats/obj
+/TeamspeakStats/Properties/PublishProfiles
+/TeamspeakStats
+/TeamspeakStatsNew/TeamspeakStatsNew/ClientApp/.angular/cache/14.0.3
