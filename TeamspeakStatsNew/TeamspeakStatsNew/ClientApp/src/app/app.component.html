@@ -1,0 +1,13 @@
+<body>
+  <div class="container">
+    <div class="theme-settings-container">
+
+      <h1 id="tableLabel">TeamSpeak Stats</h1>
+
+      <button mat-mini-fab color="primary" aria-label="Theme button" mat-icon-button (click)="toggleTheme()">
+        <mat-icon>{{ theme === 'theme-dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      </button>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</body>
