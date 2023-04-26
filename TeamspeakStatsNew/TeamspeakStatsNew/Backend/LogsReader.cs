@@ -109,7 +109,6 @@ namespace TeamspeakStatsNew.Backend
                     clientDictionaryTmp = new Dictionary<int, Client>(5000);
                 }
 
-
                 foreach (string file in files)
                 {
                     bool fileLocked = true;
@@ -149,6 +148,7 @@ namespace TeamspeakStatsNew.Backend
 
                                             Client? client = GetClient(Int32.Parse(id), clientDictionaryTmp);
 
+
                                             if (action == "connected")
                                             {
                                                 if (client != null)
@@ -182,8 +182,10 @@ namespace TeamspeakStatsNew.Backend
                         }
                     }
 
-                    aClientsDictionary = clientDictionaryTmp;
+                   
                 }
+
+                aClientsDictionary = clientDictionaryTmp;
             }
         }
 
