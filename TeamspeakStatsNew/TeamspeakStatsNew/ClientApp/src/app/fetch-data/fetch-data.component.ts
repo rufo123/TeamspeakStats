@@ -1,5 +1,5 @@
 import { Component, Inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { DateService } from "../services/date/date.service";
 import {
     interval,
@@ -9,6 +9,9 @@ import {
     map,
     Observable,
     of,
+    filter,
+    tap,
+    catchError,
 } from "rxjs";
 
 @Component({
@@ -58,9 +61,49 @@ export class FetchDataComponent {
     }
 
     httpGetAndFormatStats(): Observable<Stats[]> {
+        let etag = null;
+        if (this.stats.length <= 0) {
+            localStorage.removeItem("stats-etag");
+        } else {
+            etag = localStorage.getItem("stats-etag");
+        }
+
+        const headers = etag
+            ? new HttpHeaders({ "If-None-Match": etag })
+            : new HttpHeaders();
+
         return this.http
-            .get<Stats[]>(this.baseUrl + "api/stats")
-            .pipe(map((stats) => this.formatStats(stats)));
+            .get<Stats[]>(this.baseUrl + "api/stats", {
+                headers,
+                observe: "response",
+            })
+            .pipe(
+                map((response) => {
+                    const etag = response.headers.get("ETag");
+                    if (etag) {
+                        this.setEtag(etag);
+                        localStorage.setItem("etag", etag);
+                    }
+                    return response.body;
+                }),
+                map((response) => {
+                    if (response === null) {
+                        return [];
+                    } else {
+                        return this.formatStats(response);
+                    }
+                }),
+                catchError((error) => {
+                    if (error.status === 304) {
+                      return of(this.formatStats(this.stats));
+                    }
+                    throw error;
+                })
+            );
+    }
+
+    setEtag(etag: string): void {
+        localStorage.setItem("stats-etag", etag);
     }
 
     trackByFn(index: number, item: Stats): number {
