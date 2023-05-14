@@ -9,8 +9,6 @@ import {
     map,
     Observable,
     of,
-    filter,
-    tap,
     catchError,
 } from "rxjs";
 
@@ -95,7 +93,7 @@ export class FetchDataComponent {
                 }),
                 catchError((error) => {
                     if (error.status === 304) {
-                      return of(this.formatStats(this.stats));
+                        return of(this.formatStats(this.stats));
                     }
                     throw error;
                 })

@@ -161,7 +161,13 @@ namespace TeamspeakStatsNew.Backend
                                             else if (action == "disconnected")
                                             {
                                                 client?.AddTotalTime(date);
-                                                if (client != null) client.Online = false;
+
+                                                if (client != null)
+                                                {
+                                                    client.Online = false;
+                                                    client.LastConnected = date;
+                                                }
+
                                             }
 
                                         }

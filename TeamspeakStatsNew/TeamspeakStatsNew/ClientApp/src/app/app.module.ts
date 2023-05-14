@@ -20,6 +20,7 @@ import {
 } from "@angular/material";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DateFormatPipe } from "./pipes/date-format.pipe";
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
         HomeComponent,
         CounterComponent,
         FetchDataComponent,
+        DateFormatPipe,
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),

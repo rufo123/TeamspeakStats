@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\app\pipes\" />
     <Folder Include="ClientApp\src\app\services\theme\" />
   </ItemGroup>
 
