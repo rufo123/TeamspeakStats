@@ -1,6 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { DateService } from "../services/date/date.service";
+import { ActivatedRoute } from "@angular/router";
 import {
     interval,
     switchMap,
@@ -18,16 +19,43 @@ import {
     styleUrls: ["./fetch-data.component.scss"],
 })
 export class FetchDataComponent {
+    public selectedSortOption: string;
     public stats$: Observable<Stats[]>;
     public stats: Stats[] = [];
     public sortedBy = "lastConnected";
     public sortDirection = 1;
+    public oneMonthAgo: Date;
+    public oneDayAgo: Date;
+    public today: Date;
 
     constructor(
         private http: HttpClient,
+        private route: ActivatedRoute,
         @Inject("BASE_URL") private baseUrl: string,
         private dateService: DateService
     ) {
+        this.today = new Date();
+        this.oneMonthAgo = new Date();
+        this.oneDayAgo = new Date();
+
+        // Calculate one month ago
+        this.oneMonthAgo.setMonth(this.today.getMonth() - 1);
+
+        // Calculate one day ago
+        this.oneDayAgo.setDate(this.today.getDate() - 1);
+
+        this.selectedSortOption = "allTime";
+
+        this.route.queryParams.subscribe((params) => {
+            const sortingOptionParam: string =
+                params["sort"] || SortTime.AllTime; // Default sorting option if not provided
+            this.selectedSortOption = sortingOptionParam as SortTime;
+            this.stats.forEach((stat) => {
+                stat.hoursTotal = this.getTotalHours(stat);
+            });
+            this.stats = this.sort(this.sortedBy, this.stats, false);
+        });
+
         this.sortedBy = "hoursTotal";
         this.sortDirection = -1;
 
@@ -43,6 +71,11 @@ export class FetchDataComponent {
         this.stats$.subscribe((stats) => {
             if (JSON.stringify(stats) !== JSON.stringify(this.stats)) {
                 this.stats = stats;
+                this.today = new Date();
+                // Calculate one month ago
+                this.oneMonthAgo.setMonth(this.today.getMonth() - 1);
+                // Calculate one day ago
+                this.oneDayAgo.setDate(this.today.getDate() - 1);
             }
         });
     }
@@ -156,6 +189,75 @@ export class FetchDataComponent {
             return "unfold_more";
         }
     }
+
+    getTotalHours(stat: Stats): number {
+        let totalMilliseconds = 0;
+
+        let newConnectedDates: Date[][];
+
+        if (stat.online) {
+            newConnectedDates = [
+                ...stat.connectedDates,
+                [new Date(this.today), new Date(stat.lastConnected)],
+            ];
+        } else {
+            newConnectedDates = stat.connectedDates;
+        }
+
+        for (let i = 0; i < newConnectedDates.length; i++) {
+            const endDate: Date = new Date(newConnectedDates[i][0]);
+            let startDate: Date = new Date(newConnectedDates[i][1]);
+            let skipOneLoop = false;
+
+            switch (this.selectedSortOption) {
+                case SortTime.AllTime:
+                    // Perform actions for 'all-time' sorting option
+                    break;
+                case SortTime.Monthly:
+                    if (
+                        startDate <= this.oneMonthAgo &&
+                        endDate <= this.oneMonthAgo
+                    ) {
+                        skipOneLoop = true;
+                    } else if (
+                        startDate <= this.oneMonthAgo &&
+                        endDate > this.oneMonthAgo
+                    ) {
+                        startDate = this.oneMonthAgo;
+                    }
+                    break;
+                case SortTime.Daily:
+                    if (
+                        startDate <= this.oneDayAgo &&
+                        endDate <= this.oneDayAgo
+                    ) {
+                        skipOneLoop = true;
+                    } else if (
+                        startDate <= this.oneDayAgo &&
+                        endDate > this.oneDayAgo
+                    ) {
+                        startDate = this.oneDayAgo;
+                    }
+                    break;
+                default:
+                    // Handle default case or any additional cases
+                    break;
+            }
+
+            if (!skipOneLoop) {
+                if (endDate instanceof Date && startDate instanceof Date) {
+                    const millisecondsDifference: number = Math.abs(
+                        endDate.getTime() - startDate.getTime()
+                    );
+                    totalMilliseconds += millisecondsDifference;
+                } else {
+                    console.error("Invalid Date object");
+                }
+            }
+        }
+
+        return totalMilliseconds / (1000 * 60 * 60);
+    }
 }
 
 interface Stats {
@@ -167,5 +269,12 @@ interface Stats {
     bot: boolean;
     online: boolean;
     lastConnectedFormatted: string;
-    [key: string]: number | string | boolean | Date | string[];
+    [key: string]: number | string | boolean | Date | Date[][] | string[];
+    connectedDates: Date[][];
+}
+
+enum SortTime {
+    AllTime = "all-time",
+    Monthly = "monthly",
+    Daily = "daily",
 }

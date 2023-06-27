@@ -113,6 +113,16 @@ namespace TeamspeakStatsNew.Backend
                 {
                     bool fileLocked = true;
 
+                    // Check if some of the users, are still not assigned as online
+                    // Because one log file corresponds to one program run...
+                    if (clientDictionaryTmp != null)
+                    {
+                        foreach (KeyValuePair<int, Client> client in clientDictionaryTmp.Where(u => u.Value.Online))
+                        {
+                            client.Value.Online = false;
+                        }
+                    }
+
                     while (fileLocked)
                     {
                         try
@@ -188,7 +198,7 @@ namespace TeamspeakStatsNew.Backend
                         }
                     }
 
-                   
+
                 }
 
                 aClientsDictionary = clientDictionaryTmp;

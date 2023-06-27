@@ -76,6 +76,10 @@ $dark-theme: mat-dark-theme($primary, $accent, $warn );
     color: #000000 !important;
   }
 
+  .mat-toolbar {
+    background-color: lighten(#333, 3%) !important;
+  }
+
   @include angular-material-theme($dark-theme);
 }
 
@@ -97,3 +101,10 @@ code {
 .mat-tooltip {
   max-width: 600px !important;
 }
+
+.active-nav {
+  background-color: var(--bs-indigo) !important;
+  color: white !important;
+}
+
+

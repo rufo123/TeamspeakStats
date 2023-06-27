@@ -17,6 +17,7 @@ import {
     MatSliderModule,
     MatSlideToggleModule,
     MatTooltipModule,
+    MatToolbarModule,
 } from "@angular/material";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -42,9 +43,12 @@ import { DateFormatPipe } from "./pipes/date-format.pipe";
         MatSliderModule,
         MatTooltipModule,
         MatButtonModule,
+        MatToolbarModule,
+
         RouterModule.forRoot([
             { path: "", component: FetchDataComponent, pathMatch: "full" },
             { path: "stats", component: FetchDataComponent },
+            { path: "stats/:sort", component: FetchDataComponent },
         ]),
     ],
     providers: [DateService, ThemeService],

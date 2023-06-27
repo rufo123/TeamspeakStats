@@ -3,3 +3,24 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.toolbar-sort {
+    display: flex;
+    justify-content: center;
+    width: 20%;
+    height: 50%;
+}
+
+.theme-dark {
+  .active-nav {
+    background-color: var(--bs-indigo);
+  }
+}
+
+
+.theme-light {
+  .active-nav {
+    color: white;
+  }
+}
+

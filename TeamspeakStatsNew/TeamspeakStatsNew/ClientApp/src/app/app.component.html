@@ -4,6 +4,14 @@
 
     <h1 id="tableLabel">TeamSpeak Stats</h1>
 
+    <mat-toolbar class="toolbar-sort">
+      <span class="spacer"></span>
+      <a mat-button [routerLink]="['/stats']" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">All Time</a>
+      <a mat-button [routerLink]="['/stats']" [queryParams]="{ sort: 'monthly' }" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">Monthly</a>
+      <a mat-button [routerLink]="['/stats']" [queryParams]="{ sort: 'daily' }" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }">Daily</a>
+    </mat-toolbar>
+
+
     <button mat-mini-fab color="primary" aria-label="Theme button" mat-icon-button (click)="toggleTheme()">
       <mat-icon>{{ theme === 'theme-dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
     </button>
