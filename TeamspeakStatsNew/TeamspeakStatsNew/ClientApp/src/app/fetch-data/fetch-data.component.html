@@ -4,44 +4,61 @@
   <em>Loading...</em>
 </p>
 
+<mat-toolbar class="toolbar-sort">
+  <div class="toolbar-sort-left">
+    <span class="sort-label">Sort by:</span>
+  </div>
+  <div class="toolbar-sort-right">
+    <span class="spacer"></span>
+    <button mat-button [class.active]="activeSorting === 'all-time'" (click)="sortData('all-time')" [disabled]="isSorting">All Time</button>
+    <button mat-button [class.active]="activeSorting === 'monthly'" (click)="sortData('monthly')" [disabled]="isSorting">Monthly</button>
+    <button mat-button [class.active]="activeSorting === 'daily'" (click)="sortData('daily')" [disabled]="isSorting">Daily</button>
+  </div>
+</mat-toolbar>
+
 <table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
   <thead>
-  <tr>
-    <th (click)="sort('id', stats)">
-      Id
-      <mat-icon>{{ getSortIcon('id') }}</mat-icon>
-    </th>
-    <th (click)="sort('latestName', stats)">
-      Name
-      <mat-icon>{{ getSortIcon('latestName') }}</mat-icon>
-    </th>
-    <th (click)="sort('lastConnected', stats)">
-      Last Connected
-      <mat-icon>{{ getSortIcon('lastConnected') }}</mat-icon>
-    </th>
-    <th (click)="sort('hoursTotal', stats)">
-      Hours Total
-      <mat-icon>{{ getSortIcon('hoursTotal') }}</mat-icon>
-    </th>
-  </tr>
+    <tr>
+      <th (click)="sort('id', stats)">
+        Id
+        <mat-icon>{{ getSortIcon('id') }}</mat-icon>
+      </th>
+      <th (click)="sort('latestName', stats)">
+        Name
+        <mat-icon>{{ getSortIcon('latestName') }}</mat-icon>
+      </th>
+      <th (click)="sort('lastConnected', stats)">
+        Last Connected
+        <mat-icon>{{ getSortIcon('lastConnected') }}</mat-icon>
+      </th>
+      <th (click)="sort('hoursTotal', stats)">
+        Hours Total
+        <mat-icon>{{ getSortIcon('hoursTotal') }}</mat-icon>
+      </th>
+    </tr>
   </thead>
-  <tbody>
-  <tr *ngFor="let stat of stats$ | async; trackBy: trackByFn" [ngClass]="{'online': stat.online}">
-    <td>
-      {{ stat.id }}
-    </td>
-    <td>
-      <span matTooltip="{{stat.namesList.join(', ')}}" matTooltipClass="tooltip-custom" matTooltipPosition="right">
-        {{ stat.latestName }}
-      </span>
-      <span *ngIf="stat.bot" matBadge="BOT" matBadgeSize="small" matBadgeColor="accent" class="bot-identifier"></span>
-    </td>
-    <td>
-      {{ stat.lastConnectedFormatted }}
-    </td>
-    <td>
-      {{ stat.hoursTotal  | number:'1.0-0'}}
-    </td>
-  </tr>
+
+  <tbody *ngIf="!isSorting">
+    <tr *ngFor="let stat of stats$ | async; trackBy: trackByFn" [ngClass]="{'online': stat.online}">
+      <td>
+        {{ stat.id }}
+      </td>
+      <td>
+        <span matTooltip="{{stat.namesList.join(', ')}}" matTooltipClass="tooltip-custom" matTooltipPosition="right">
+          {{ stat.latestName }}
+        </span>
+        <span *ngIf="stat.bot" matBadge="BOT" matBadgeSize="small" matBadgeColor="accent" class="bot-identifier"></span>
+      </td>
+      <td>
+        {{ stat.lastConnectedFormatted }}
+      </td>
+      <td>
+        {{ stat.hoursTotal | number:'1.0-0'}}
+      </td>
+    </tr>
   </tbody>
 </table>
+
+<div class="spinner-container">
+  <mat-spinner color="primary" mode="indeterminate" *ngIf="isSorting"></mat-spinner>
+</div>

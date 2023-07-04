@@ -98,6 +98,10 @@ code {
   border-color: #1861ac;
 }
 
+app-fetch-data .mat-button.active {
+  color: white;
+}
+
 .mat-tooltip {
   max-width: 600px !important;
 }

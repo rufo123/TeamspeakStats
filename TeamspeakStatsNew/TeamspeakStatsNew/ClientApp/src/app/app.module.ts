@@ -18,6 +18,7 @@ import {
     MatSlideToggleModule,
     MatTooltipModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
 } from "@angular/material";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -44,6 +45,7 @@ import { DateFormatPipe } from "./pipes/date-format.pipe";
         MatTooltipModule,
         MatButtonModule,
         MatToolbarModule,
+        MatProgressSpinnerModule,
 
         RouterModule.forRoot([
             { path: "", component: FetchDataComponent, pathMatch: "full" },
