@@ -23,9 +23,22 @@ namespace TeamspeakStatsNew.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Client>> Get()
+        public ActionResult<IEnumerable<Client>> Get(string? dateFrom = "")
         {
+
             Client[]? clientDictionary = aLogsReader.ClientsDictionary?.Values.ToArray();
+
+            if (!DateTime.TryParse(dateFrom, out DateTime dateToCalculateFrom))
+            {
+                return BadRequest("Error reading Date From");
+            }
+
+            for (int i = 0; i < clientDictionary?.Length; i++)
+            {
+                clientDictionary[i].HoursTotal =
+                    aLogsReader.CalculateTotalHoursOfClient(clientDictionary[i].Id, dateToCalculateFrom);
+            }
+
             if (clientDictionary != null)
             {
                 var hash = ComputeHash(clientDictionary); // Compute a hash of the clients array
@@ -48,7 +61,7 @@ namespace TeamspeakStatsNew.Controllers
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
-#pragma warning disable CA1822
+        #pragma warning disable CA1822
         private string ComputeHash(IEnumerable<Client> clients)
         #pragma warning restore CA1822
         {

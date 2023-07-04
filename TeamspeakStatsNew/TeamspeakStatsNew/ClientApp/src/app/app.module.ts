@@ -17,9 +17,12 @@ import {
     MatSliderModule,
     MatSlideToggleModule,
     MatTooltipModule,
+    MatToolbarModule,
+    MatProgressSpinnerModule,
 } from "@angular/material";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DateFormatPipe } from "./pipes/date-format.pipe";
 
 @NgModule({
     declarations: [
@@ -28,6 +31,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
         HomeComponent,
         CounterComponent,
         FetchDataComponent,
+        DateFormatPipe,
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
@@ -40,9 +44,13 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
         MatSliderModule,
         MatTooltipModule,
         MatButtonModule,
+        MatToolbarModule,
+        MatProgressSpinnerModule,
+
         RouterModule.forRoot([
             { path: "", component: FetchDataComponent, pathMatch: "full" },
             { path: "stats", component: FetchDataComponent },
+            { path: "stats/:sort", component: FetchDataComponent },
         ]),
     ],
     providers: [DateService, ThemeService],

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace TeamspeakStatsNew.Backend
@@ -7,17 +9,20 @@ namespace TeamspeakStatsNew.Backend
     {
         private readonly string aLogsPath;
         private Dictionary<int, Client>? aClientsDictionary;
+        private Dictionary<int, ClientConnectedData>? aClientConnectedDataDictionary;
         private readonly Dictionary<int, int> aMergedIdsDictionary;
         private readonly HashSet<int> aBotsHashSet;
         private readonly object aLockObject = new object();
 
         public Dictionary<int, Client>? ClientsDictionary => aClientsDictionary;
+        public Dictionary<int, ClientConnectedData>? ClientConnectedDataDictionary => aClientConnectedDataDictionary;
 
         public string LogsPath => aLogsPath;
 
         public LogsReader()
         {
             aClientsDictionary = null;
+            aClientConnectedDataDictionary = null;
             aLogsPath = File.ReadAllText("Configuration/logs_path.txt");
             aMergedIdsDictionary = CreateMergedIdsDictionary(ReadMergedIds());
             aBotsHashSet = ReadBots();
@@ -99,19 +104,33 @@ namespace TeamspeakStatsNew.Backend
                 Array.Sort(files, StringComparer.InvariantCulture); // Sort the files in ascending order
 
                 Dictionary<int, Client> clientDictionaryTmp;
+                Dictionary<int, ClientConnectedData> clientConnectedDataDictionaryTmp;
 
                 if (aClientsDictionary is not null && aClientsDictionary.Count > 0)
                 {
                     clientDictionaryTmp = new Dictionary<int, Client>(aClientsDictionary.Count);
+                    clientConnectedDataDictionaryTmp = new Dictionary<int, ClientConnectedData>(aClientConnectedDataDictionary.Count);
+
                 }
                 else
                 {
                     clientDictionaryTmp = new Dictionary<int, Client>(5000);
+                    clientConnectedDataDictionaryTmp = new Dictionary<int, ClientConnectedData>(5000);
                 }
 
                 foreach (string file in files)
                 {
                     bool fileLocked = true;
+
+                    // Check if some of the users, are still not assigned as online
+                    // Because one log file corresponds to one program run...
+                    if (clientDictionaryTmp != null)
+                    {
+                        foreach (KeyValuePair<int, Client> client in clientDictionaryTmp.Where(u => u.Value.Online))
+                        {
+                            client.Value.Online = false;
+                        }
+                    }
 
                     while (fileLocked)
                     {
@@ -144,7 +163,7 @@ namespace TeamspeakStatsNew.Backend
                                             string id = match.Groups[4].Value;
                                             string extraInfo = match.Groups[5].Value;
 
-                                            AddClient(Int32.Parse(id), name, clientDictionaryTmp);
+                                            AddClient(Int32.Parse(id), name, clientDictionaryTmp, clientConnectedDataDictionaryTmp);
 
                                             Client? client = GetClient(Int32.Parse(id), clientDictionaryTmp);
 
@@ -161,7 +180,14 @@ namespace TeamspeakStatsNew.Backend
                                             else if (action == "disconnected")
                                             {
                                                 client?.AddTotalTime(date);
-                                                if (client != null) client.Online = false;
+
+                                                if (client != null)
+                                                {
+                                                    clientConnectedDataDictionaryTmp?[client.Id].ConnectionsDataListOfArrays.Add(new[] { date, client.LastConnected });
+                                                    client.Online = false;
+                                                    client.LastConnected = date;
+                                                }
+
                                             }
 
                                         }
@@ -182,14 +208,66 @@ namespace TeamspeakStatsNew.Backend
                         }
                     }
 
-                   
+
                 }
 
                 aClientsDictionary = clientDictionaryTmp;
+                aClientConnectedDataDictionary = clientConnectedDataDictionaryTmp;
             }
         }
 
-        public void AddClient(int parId, string parName, Dictionary<int, Client>? parClientDictionary)
+        public double CalculateMillisecondsConnected(DateTime parEndTime, DateTime parStartTime, DateTime parDateFrom)
+        {
+            bool skipReadingInvalid = false;
+
+            if (parStartTime <= parDateFrom && parEndTime <= parDateFrom
+               )
+            {
+                skipReadingInvalid = true;
+            }
+            else if (parStartTime <= parDateFrom && parEndTime > parDateFrom
+                    )
+            {
+                parStartTime = parDateFrom;
+            }
+
+            if (!skipReadingInvalid)
+            {
+                TimeSpan test = parEndTime.Subtract(parStartTime);
+                return test.TotalMilliseconds;
+
+            }
+
+            return 0;
+        }
+
+        public int CalculateTotalHoursOfClient(int parClientId, DateTime parDateFrom)
+        {
+
+            double totalMillisecondsConnected = 0.0d;
+
+            if (aClientConnectedDataDictionary?[parClientId] != null)
+            {
+
+                foreach (var connectionDateEntry in aClientConnectedDataDictionary[parClientId].ConnectionsDataListOfArrays)
+                {
+                    DateTime endDateTime = connectionDateEntry[0];
+                    DateTime startDateTime = connectionDateEntry[1];
+
+                    totalMillisecondsConnected += CalculateMillisecondsConnected(endDateTime, startDateTime, parDateFrom);
+                }
+
+                if (aClientsDictionary != null && aClientsDictionary[parClientId].Online)
+                {
+                    totalMillisecondsConnected += CalculateMillisecondsConnected(DateTime.Now,
+                        aClientsDictionary[parClientId].LastConnected, parDateFrom);
+                }
+            }
+
+            return (int)(totalMillisecondsConnected / (1000 * 60 * 60));
+        }
+
+        public void AddClient(int parId, string parName, Dictionary<int, Client>? parClientDictionary, Dictionary<int, ClientConnectedData?> parClientConnectedDataDictionary)
         {
             int foundId = aMergedIdsDictionary.ContainsKey(parId) ? aMergedIdsDictionary[parId] : parId;
 
@@ -200,6 +278,7 @@ namespace TeamspeakStatsNew.Backend
             else
             {
                 Client newClient = new Client(foundId);
+                parClientConnectedDataDictionary[foundId] = new ClientConnectedData(foundId);
                 newClient.AddName(parName);
                 if (parClientDictionary != null) parClientDictionary[foundId] = newClient;
             }

@@ -1,6 +1,7 @@
 import { Component, Inject } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { DateService } from "../services/date/date.service";
+import { ActivatedRoute } from "@angular/router";
 import {
     interval,
     switchMap,
@@ -9,9 +10,8 @@ import {
     map,
     Observable,
     of,
-    filter,
-    tap,
     catchError,
+    tap,
 } from "rxjs";
 
 @Component({
@@ -20,18 +20,43 @@ import {
     styleUrls: ["./fetch-data.component.scss"],
 })
 export class FetchDataComponent {
+    public selectedSortOption: string;
+    public dateToCountHoursFrom: Date;
     public stats$: Observable<Stats[]>;
     public stats: Stats[] = [];
     public sortedBy = "lastConnected";
     public sortDirection = 1;
+    public oneMonthAgo: Date;
+    public oneDayAgo: Date;
+    public today: Date;
+    public isSorting: boolean;
+    public activeSorting: string;
 
     constructor(
         private http: HttpClient,
+        private route: ActivatedRoute,
         @Inject("BASE_URL") private baseUrl: string,
         private dateService: DateService
     ) {
+        this.isSorting = false;
+        this.activeSorting = SortTime.AllTime;
+        this.dateToCountHoursFrom = new Date();
+        this.today = new Date();
+        this.oneMonthAgo = new Date();
+        this.oneDayAgo = new Date();
+
+        // Calculate one month ago
+        this.oneMonthAgo.setMonth(this.today.getMonth() - 1);
+
+        // Calculate one day ago
+        this.oneDayAgo.setDate(this.today.getDate() - 1);
+
+        this.selectedSortOption = "allTime";
+
         this.sortedBy = "hoursTotal";
         this.sortDirection = -1;
+
+        this.sortData();
 
         this.stats$ = interval(5000).pipe(
             startWith(0),
@@ -45,8 +70,51 @@ export class FetchDataComponent {
         this.stats$.subscribe((stats) => {
             if (JSON.stringify(stats) !== JSON.stringify(this.stats)) {
                 this.stats = stats;
+                this.today = new Date();
+                // Calculate one month ago
+                this.oneMonthAgo.setMonth(this.today.getMonth() - 1);
+                // Calculate one day ago
+                this.oneDayAgo.setDate(this.today.getDate() - 1);
+                this.stats = this.sort(this.sortedBy, this.stats, false);
             }
         });
+    }
+
+    sortData(sortBy: string = SortTime.AllTime) {
+        this.isSorting = true;
+        this.selectedSortOption = sortBy as SortTime;
+
+        switch (this.selectedSortOption) {
+            case SortTime.AllTime:
+                this.dateToCountHoursFrom = new Date();
+                this.dateToCountHoursFrom.setFullYear(1);
+                break;
+            case SortTime.Monthly:
+                this.dateToCountHoursFrom = this.oneMonthAgo;
+                break;
+            case SortTime.Daily:
+                this.dateToCountHoursFrom = this.oneDayAgo;
+                break;
+            default:
+                // Handle other cases if needed
+                break;
+        }
+        localStorage.setItem("stats-etag", "null");
+        this.httpGetAndFormatStats().subscribe(
+            (stats) => {
+                // Handle the received stats data
+                this.stats$ = of(stats); // Update the value of this.stats$
+                this.stats = stats;
+                this.stats = this.sort(this.sortedBy, this.stats, false);
+                this.isSorting = false;
+                this.activeSorting = sortBy;
+            },
+            (error) => {
+                // Handle any errors that occur during the HTTP request
+                this.isSorting = false;
+                this.activeSorting = sortBy;
+            }
+        );
     }
 
     formatStats(stats: Stats[]) {
@@ -72,9 +140,15 @@ export class FetchDataComponent {
             ? new HttpHeaders({ "If-None-Match": etag })
             : new HttpHeaders();
 
+        const params = new HttpParams().set(
+            "dateFrom",
+            this.dateToCountHoursFrom.toISOString()
+        ); // Add the 'dateFrom' parameter to the query string
+
         return this.http
             .get<Stats[]>(this.baseUrl + "api/stats", {
                 headers,
+                params,
                 observe: "response",
             })
             .pipe(
@@ -95,7 +169,7 @@ export class FetchDataComponent {
                 }),
                 catchError((error) => {
                     if (error.status === 304) {
-                      return of(this.formatStats(this.stats));
+                        return of(this.formatStats(this.stats));
                     }
                     throw error;
                 })
@@ -158,6 +232,10 @@ export class FetchDataComponent {
             return "unfold_more";
         }
     }
+
+    getTotalHours(stat: Stats): number {
+        return stat.hoursTotal;
+    }
 }
 
 interface Stats {
@@ -169,5 +247,12 @@ interface Stats {
     bot: boolean;
     online: boolean;
     lastConnectedFormatted: string;
-    [key: string]: number | string | boolean | Date | string[];
+    [key: string]: number | string | boolean | Date | Date[][] | string[];
+    connectedDates: Date[][];
+}
+
+enum SortTime {
+    AllTime = "all-time",
+    Monthly = "monthly",
+    Daily = "daily",
 }
