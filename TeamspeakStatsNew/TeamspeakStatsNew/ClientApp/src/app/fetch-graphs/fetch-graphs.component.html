@@ -1,0 +1,25 @@
+<mat-card>
+  <div class="chart-container">
+    <canvas baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [type]="'bar'">
+    </canvas>
+  </div>
+</mat-card>
+
+<mat-toolbar class="toolbar-sort-by-time">
+  <div class="toolbar-sort-left">
+    <span class="sort-label">Sort by:</span>
+  </div>
+  <div class="toolbar-sort-right">
+    <span class="spacer"></span>
+    <button mat-button [class.active]="activeSorting === 'year'" (click)="getGraphData('year')" [disabled]="isSorting">Year</button>
+    <button mat-button [class.active]="activeSorting === 'month'" (click)="getGraphData('month')" [disabled]="isSorting">Month</button>
+    <button mat-button [class.active]="activeSorting === 'day'" (click)="getGraphData('day')" [disabled]="isSorting">Day</button>
+    <button mat-button [class.active]="activeSorting === 'hour'" (click)="getGraphData('hour')" [disabled]="isSorting">Hour</button>
+  </div>
+</mat-toolbar>
+

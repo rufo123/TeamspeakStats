@@ -1,12 +1,51 @@
 <body>
-<div class="container">
-  <div class="theme-settings-container">
+  <div class="container">
+    <div class="theme-settings-container">
 
-    <h1 id="tableLabel">TeamSpeak Stats</h1>
-    <button mat-mini-fab color="primary" aria-label="Theme button" mat-icon-button (click)="toggleTheme()">
-      <mat-icon>{{ theme === 'theme-dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
-    </button>
+      <div class="title-container">
+        <div class="title-left-col">
+          <h1 id="tableLabel">TeamSpeak Stats</h1>
+          <p>TeamSpeak stats for RFTS by @rufo123.</p>
+        </div>
+
+        <div class="title-right-col">
+
+          <button mat-mini-fab color="primary" aria-label="Menu button" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item [routerLink]="['stats']" routerLinkActive="active-route-button">
+              <mat-icon>analytics</mat-icon>
+              <span>Stats</span>
+            </button>
+            <button mat-menu-item [routerLink]="['graphs']" routerLinkActive="active-route-button">
+              <mat-icon>bar_chart</mat-icon>
+              <span>Graphs</span>
+            </button>
+          </mat-menu>
+
+
+          <mat-divider class="button-divider" [vertical]="true"></mat-divider>
+
+          <button mat-mini-fab color="primary" aria-label="Theme button" mat-icon-button (click)="toggleTheme()">
+            <mat-icon>{{ theme === 'theme-dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
   </div>
-  <router-outlet></router-outlet>
-</div>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <p>&copy; {{ currentYear }} - rufo123. | All rights reserved. | Made in Angular (TS) & .NET (C#)</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
 </body>

@@ -11,7 +11,6 @@ import {
     Observable,
     of,
     catchError,
-    tap,
 } from "rxjs";
 
 @Component({
@@ -146,7 +145,7 @@ export class FetchDataComponent {
         ); // Add the 'dateFrom' parameter to the query string
 
         return this.http
-            .get<Stats[]>(this.baseUrl + "api/stats", {
+            .get<Stats[]>(this.baseUrl + "api/stats/clients", {
                 headers,
                 params,
                 observe: "response",

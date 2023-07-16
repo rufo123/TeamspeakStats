@@ -1,0 +1,30 @@
+.chart-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container canvas {
+  max-height: 400px;
+  width: auto;
+}
+
+.toolbar-sort-by-time {
+  display: flex;
+  justify-content: space-around;
+  margin: 0.5em 0;
+}
+
+.toolbar-sort-left {
+
+}
+
+.toolbar-sort-right {
+
+}
+
+.mat-button.active {
+  background-color: var(--bs-purple) !important;
+}

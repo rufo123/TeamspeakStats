@@ -80,6 +80,10 @@ $dark-theme: mat-dark-theme($primary, $accent, $warn );
     background-color: lighten(#333, 3%) !important;
   }
 
+  footer {
+    background-color: lighten(#333, 1%) !important;
+  }
+
   @include angular-material-theme($dark-theme);
 }
 

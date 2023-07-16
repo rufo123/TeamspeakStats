@@ -19,10 +19,16 @@ import {
     MatTooltipModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
+    MatMenuModule,
+    MatCardModule,
 } from "@angular/material";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DateFormatPipe } from "./pipes/date-format.pipe";
+import { FetchGraphsComponent } from "./fetch-graphs/fetch-graphs.component";
+import { NgChartsModule } from "ng2-charts";
+import { DatePipe } from "@angular/common";
 
 @NgModule({
     declarations: [
@@ -31,6 +37,7 @@ import { DateFormatPipe } from "./pipes/date-format.pipe";
         HomeComponent,
         CounterComponent,
         FetchDataComponent,
+        FetchGraphsComponent,
         DateFormatPipe,
     ],
     imports: [
@@ -46,14 +53,20 @@ import { DateFormatPipe } from "./pipes/date-format.pipe";
         MatButtonModule,
         MatToolbarModule,
         MatProgressSpinnerModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatCardModule,
+
+        NgChartsModule,
 
         RouterModule.forRoot([
             { path: "", component: FetchDataComponent, pathMatch: "full" },
             { path: "stats", component: FetchDataComponent },
             { path: "stats/:sort", component: FetchDataComponent },
+            { path: "graphs", component: FetchGraphsComponent },
         ]),
     ],
-    providers: [DateService, ThemeService],
+    providers: [DateService, ThemeService, DatePipe],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

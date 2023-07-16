@@ -9,9 +9,11 @@ import { Theme, ThemeService } from "./services/theme/theme.service";
 export class AppComponent {
     title = "app";
     theme: Theme = "theme-light";
+    currentYear: number;
 
     constructor(private themeService: ThemeService) {
         this.themeService.theme$.subscribe((theme) => (this.theme = theme));
+        this.currentYear = new Date().getFullYear();
     }
 
     ngOnInit() {

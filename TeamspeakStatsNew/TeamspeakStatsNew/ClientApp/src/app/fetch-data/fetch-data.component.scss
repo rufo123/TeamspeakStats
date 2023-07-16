@@ -20,7 +20,7 @@
 }
 
 .toolbar-sort-left {
-    width: 100%;
+  width: 100%;
   display: flex;
   justify-content: left;
 }
@@ -44,19 +44,19 @@
 
   .mat-button.active {
     color: white;
-    }
+  }
 }
 
 .mat-button.active {
-  background-color: var(--bs-indigo) !important;
+  background-color: var(--bs-purple) !important;
 }
 
 mat-spinner {
   border-top: none !important;
-
 }
 
 .spinner-container {
   justify-content: center;
   display: flex;
 }
+
