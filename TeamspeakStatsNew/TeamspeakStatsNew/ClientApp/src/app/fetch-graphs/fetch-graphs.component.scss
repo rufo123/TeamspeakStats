@@ -11,10 +11,17 @@
   width: auto;
 }
 
-.toolbar-sort-by-time {
+.toolbar-sort-by-time, .toolbar-range-options {
   display: flex;
-  justify-content: space-around;
   margin: 0.5em 0;
+}
+
+.toolbar-sort-by-time {
+  justify-content: space-around;
+}
+
+.toolbar-range-options {
+  justify-content: center;
 }
 
 .toolbar-sort-left {

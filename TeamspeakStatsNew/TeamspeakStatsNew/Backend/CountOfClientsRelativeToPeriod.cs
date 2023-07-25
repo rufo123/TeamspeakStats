@@ -17,16 +17,24 @@ namespace TeamspeakStatsNew.Backend
 
         public SortedDictionary<DateTime, int>? DictionaryCountYears => aDictionaryCountYears;
 
+        private SortedDictionary<DateTime, List<int>> aDictionaryOfAlreadyCountedClientIds;
+
+
+        public CountOfClientsRelativeToPeriod()
+        {
+            aDictionaryOfAlreadyCountedClientIds = new SortedDictionary<DateTime, List<int>>();
+        }
 
         public void Initialise(
             Dictionary<int, ClientConnectedData> parDictionaryClientConnectedData,
             Dictionary<int, Client> parDictionaryOfClients
             )
         {
-           aDictionaryCountHours = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Hour, parDictionaryClientConnectedData, parDictionaryOfClients);
-           aDictionaryCountDays = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Day, parDictionaryClientConnectedData, parDictionaryOfClients);
-           aDictionaryCountMonths = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Month, parDictionaryClientConnectedData, parDictionaryOfClients);
-           aDictionaryCountYears = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Year, parDictionaryClientConnectedData, parDictionaryOfClients);
+            aDictionaryOfAlreadyCountedClientIds = new SortedDictionary<DateTime, List<int>>();
+            aDictionaryCountHours = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Hour, parDictionaryClientConnectedData, parDictionaryOfClients);
+            aDictionaryCountDays = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Day, parDictionaryClientConnectedData, parDictionaryOfClients);
+            aDictionaryCountMonths = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Month, parDictionaryClientConnectedData, parDictionaryOfClients);
+            aDictionaryCountYears = CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Year, parDictionaryClientConnectedData, parDictionaryOfClients);
         }
 
         private DateTime AddDateTimeHelper(Periods parPeriod, DateTime parDateTime, bool skipAddition)
@@ -52,17 +60,18 @@ namespace TeamspeakStatsNew.Backend
         }
 
         public SortedDictionary<DateTime, int>? CalculateCountOfPlayerHoursRelativeToPeriod(
-            Periods parPeriod, 
+            Periods parPeriod,
             Dictionary<int, ClientConnectedData> parDictionaryClientConnectedData,
             Dictionary<int, Client> parDictionaryOfClients)
         {
 
             SortedDictionary<DateTime, int>? countOfPlayersRelativeToPeriod = new SortedDictionary<DateTime, int>();
+            aDictionaryOfAlreadyCountedClientIds = new SortedDictionary<DateTime, List<int>>();
 
 
             foreach (var values in parDictionaryClientConnectedData.Values)
             {
-                LoopConnectedTimesAndAssignConnectedBetweenPeriod(values, parDictionaryOfClients , parPeriod, ref countOfPlayersRelativeToPeriod);
+                LoopConnectedTimesAndAssignConnectedBetweenPeriod(values, parDictionaryOfClients, parPeriod, ref countOfPlayersRelativeToPeriod);
 
             }
 
@@ -80,20 +89,11 @@ namespace TeamspeakStatsNew.Backend
 
             foreach (var connectedTimes in parClientConnectedData.ConnectionsDataListOfArrays)
             {
+
                 DateTime connected = connectedTimes[1];
                 DateTime disconnected = connectedTimes[0];
 
-                if (connected >= new DateTime(2023, 7, 14))
-                {
-                    Debug.WriteLine("");
-                }
-
-                if (connected > disconnected)
-                {
-                    Debug.WriteLine("");
-                }
-
-                IterateEachHourAndAssignConnectedTimes(connected, disconnected, parPeriod, ref parRefSortedDictToSaveTo);
+                IterateEachHourAndAssignConnectedTimes(connected, disconnected, parPeriod, parClientConnectedData.Id, ref parRefSortedDictToSaveTo);
 
                 lastDisconnectedTime = disconnected;
 
@@ -101,12 +101,12 @@ namespace TeamspeakStatsNew.Backend
 
             if (lastDisconnectedTime != DateTime.UnixEpoch && parClientDataDictionary[parClientConnectedData.Id].Online)
             {
-                IterateEachHourAndAssignConnectedTimes(lastDisconnectedTime, DateTime.Now, parPeriod, ref parRefSortedDictToSaveTo);
+                IterateEachHourAndAssignConnectedTimes(lastDisconnectedTime, DateTime.Now, parPeriod, parClientConnectedData.Id, ref parRefSortedDictToSaveTo);
             }
 
         }
 
-        private void IterateEachHourAndAssignConnectedTimes(DateTime parConnected, DateTime parDisconnected, Periods parPeriod, ref SortedDictionary<DateTime, int>? parRefSortedDictToSaveTo)
+        private void IterateEachHourAndAssignConnectedTimes(DateTime parConnected, DateTime parDisconnected, Periods parPeriod, int parClientId, ref SortedDictionary<DateTime, int>? parRefSortedDictToSaveTo)
         {
             bool isFirstIteration = true;
 
@@ -141,6 +141,24 @@ namespace TeamspeakStatsNew.Backend
                 }
 
                 // Update the count of connected players for the rounded hour
+
+                if (aDictionaryOfAlreadyCountedClientIds.ContainsKey(roundedTime))
+                {
+                    foreach (var clientId in aDictionaryOfAlreadyCountedClientIds[roundedTime])
+                    {
+                        if (clientId == parClientId)
+                        {
+                            return;
+                        }
+                    }
+
+                    aDictionaryOfAlreadyCountedClientIds[roundedTime].Add(parClientId);
+                }
+                else
+                {
+                    aDictionaryOfAlreadyCountedClientIds.Add(roundedTime, new List<int>());
+                }
+
                 if (parRefSortedDictToSaveTo.ContainsKey(roundedTime))
                     parRefSortedDictToSaveTo[roundedTime]++;
                 else

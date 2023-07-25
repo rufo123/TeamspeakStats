@@ -10,6 +10,31 @@
   </div>
 </mat-card>
 
+<mat-toolbar class="toolbar-range-options">
+  <button mat-mini-fab mat-button color="primary" (click)="getGraphData('year')" [disabled]="false">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <button mat-button (click)="getGraphData('month')" [disabled]="false">Month</button>
+  <button mat-mini-fab mat-button color="primary" (click)="getGraphData('day')" [disabled]="false">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+
+  <mat-form-field>
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+      <input matStartDate formControlName="start" placeholder="Start date">
+      <input matEndDate formControlName="end" placeholder="End date">
+    </mat-date-range-input>
+    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+
+    <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+    <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+  </mat-form-field>
+
+</mat-toolbar>
+
 <mat-toolbar class="toolbar-sort-by-time">
   <div class="toolbar-sort-left">
     <span class="sort-label">Sort by:</span>
@@ -22,6 +47,8 @@
     <button mat-button [class.active]="activeSorting === 'hour'" (click)="getGraphData('hour')" [disabled]="isSorting">Hour</button>
   </div>
 </mat-toolbar>
+
+
 
 Prototype | Work in Progress
 

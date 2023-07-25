@@ -14,7 +14,7 @@
   </div>
 </mat-toolbar>
 
-<table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
+<table mat-table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
   <thead>
     <tr>
       <th (click)="sort('id', stats)">

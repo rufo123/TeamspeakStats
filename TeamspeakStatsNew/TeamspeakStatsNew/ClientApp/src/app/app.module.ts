@@ -1,6 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
 
@@ -23,6 +23,9 @@ import {
     MatMenuModule,
     MatCardModule,
 } from "@angular/material";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatNativeDateModule } from "@angular/material/core";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DateFormatPipe } from "./pipes/date-format.pipe";
@@ -45,6 +48,8 @@ import { DatePipe } from "@angular/common";
         BrowserAnimationsModule,
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
+
         MatIconModule,
         MatBadgeModule,
         MatSlideToggleModule,
@@ -56,6 +61,9 @@ import { DatePipe } from "@angular/common";
         MatMenuModule,
         MatDividerModule,
         MatCardModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
 
         NgChartsModule,
 

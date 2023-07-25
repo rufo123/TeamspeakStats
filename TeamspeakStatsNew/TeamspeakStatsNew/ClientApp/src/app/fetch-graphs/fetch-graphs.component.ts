@@ -3,6 +3,7 @@ import { ChartConfiguration } from "chart.js";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { BaseChartDirective } from "ng2-charts";
 import { DatePipe } from "@angular/common";
+import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
     selector: "app-fetch-graphs",
@@ -13,6 +14,11 @@ export class FetchGraphsComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
     title = "ng2-charts-demo";
+
+    range = new FormGroup({
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+    });
 
     public barChartLegend = true;
     public barChartPlugins = [];

@@ -84,6 +84,6 @@
             set => aOnline = value;
         }
 
-       // public List<DateTime[]> ConnectedDates => aConnectedDates;
+        // public List<DateTime[]> ConnectedDates => aConnectedDates;
     }
 }

@@ -108,7 +108,7 @@ export class FetchDataComponent {
                 this.isSorting = false;
                 this.activeSorting = sortBy;
             },
-            (error) => {
+            () => {
                 // Handle any errors that occur during the HTTP request
                 this.isSorting = false;
                 this.activeSorting = sortBy;

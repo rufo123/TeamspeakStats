@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Numerics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace TeamspeakStatsNew.Backend
@@ -166,7 +164,6 @@ namespace TeamspeakStatsNew.Backend
                                             AddClient(Int32.Parse(id), name, clientDictionaryTmp, clientConnectedDataDictionaryTmp);
 
                                             Client? client = GetClient(Int32.Parse(id), clientDictionaryTmp);
-
 
                                             if (action == "connected")
                                             {
