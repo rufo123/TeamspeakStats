@@ -11,7 +11,7 @@ import { CounterComponent } from "./counter/counter.component";
 import { FetchDataComponent } from "./fetch-data/fetch-data.component";
 import { DateService } from "./services/date/date.service";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatLegacyFormFieldModule as MatFormFieldModule } from "@angular/material/legacy-form-field";
 import { MatNativeDateModule } from "@angular/material/core";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -26,15 +26,15 @@ import {
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatBadgeModule } from "@angular/material/badge";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatSliderModule } from "@angular/material/slider";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from "@angular/material/legacy-slide-toggle";
+import { MatLegacySliderModule as MatSliderModule } from "@angular/material/legacy-slider";
+import { MatLegacyTooltipModule as MatTooltipModule } from "@angular/material/legacy-tooltip";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatCardModule } from "@angular/material/card";
+import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-card";
 
 @NgModule({
     declarations: [
