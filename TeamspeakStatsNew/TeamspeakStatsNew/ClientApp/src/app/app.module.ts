@@ -10,19 +10,6 @@ import { HomeComponent } from "./home/home.component";
 import { CounterComponent } from "./counter/counter.component";
 import { FetchDataComponent } from "./fetch-data/fetch-data.component";
 import { DateService } from "./services/date/date.service";
-import {
-    MatBadgeModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-    MatToolbarModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
-    MatMenuModule,
-    MatCardModule,
-} from "@angular/material";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatNativeDateModule } from "@angular/material/core";
@@ -32,6 +19,22 @@ import { DateFormatPipe } from "./pipes/date-format.pipe";
 import { FetchGraphsComponent } from "./fetch-graphs/fetch-graphs.component";
 import { NgChartsModule } from "ng2-charts";
 import { DatePipe } from "@angular/common";
+import {
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+} from "@angular-material-components/datetime-picker";
+
+import { MatIconModule } from "@angular/material/icon";
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSliderModule } from "@angular/material/slider";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatCardModule } from "@angular/material/card";
 
 @NgModule({
     declarations: [
@@ -49,6 +52,9 @@ import { DatePipe } from "@angular/common";
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
+
+        NgxMatDatetimePickerModule,
+        NgxMatTimepickerModule,
 
         MatIconModule,
         MatBadgeModule,
