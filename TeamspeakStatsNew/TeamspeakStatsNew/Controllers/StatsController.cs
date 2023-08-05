@@ -15,14 +15,11 @@ namespace TeamspeakStatsNew.Controllers
         private readonly LogsReader aLogsReader;
         private readonly FolderMonitor aFolderMonitor;
 
-        private readonly CountOfClientsRelativeToPeriod aCountOfClientsRelativeToPeriod;
-
         public StatsController(ILogger<StatsController> parLogger, LogsReader parLogsReader, FolderMonitor parFolderMonitor)
         {
             aParLogger = parLogger;
             aLogsReader = parLogsReader;
             aFolderMonitor = parFolderMonitor;
-            aCountOfClientsRelativeToPeriod = new CountOfClientsRelativeToPeriod();
         }
 
         [HttpGet("clients")]
@@ -55,7 +52,7 @@ namespace TeamspeakStatsNew.Controllers
         }
 
         [HttpGet("conn-relative-to")]
-        public ActionResult<string> GetClientsConnRelativeToPeriod(string? period = "")
+        public ActionResult<string> GetClientsConnRelativeToPeriod(string? period = "", DateTime relevantDateTime = default)
         {
 
             SortedDictionary<DateTime, int>? connectedClientsRelativeToPeriod;
@@ -67,22 +64,26 @@ namespace TeamspeakStatsNew.Controllers
 
             switch (period)
             {
-                case "hour":
-                    connectedClientsRelativeToPeriod = aCountOfClientsRelativeToPeriod.CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Hour, aLogsReader.ClientConnectedDataDictionary, aLogsReader.ClientsDictionary);
-                    break;
                 case "day":
-                    connectedClientsRelativeToPeriod = aCountOfClientsRelativeToPeriod.CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Day, aLogsReader.ClientConnectedDataDictionary, aLogsReader.ClientsDictionary);
+                    connectedClientsRelativeToPeriod = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountDays;
                     break;
                 case "month":
-                    connectedClientsRelativeToPeriod = aCountOfClientsRelativeToPeriod.CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Month, aLogsReader.ClientConnectedDataDictionary, aLogsReader.ClientsDictionary);
+                    connectedClientsRelativeToPeriod = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountMonths;
                     break;
                 case "year":
-                    connectedClientsRelativeToPeriod = aCountOfClientsRelativeToPeriod.CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Year, aLogsReader.ClientConnectedDataDictionary, aLogsReader.ClientsDictionary);
+                    connectedClientsRelativeToPeriod = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountYears;
                     break;
                 default:
-                    connectedClientsRelativeToPeriod = aCountOfClientsRelativeToPeriod.CalculateCountOfPlayerHoursRelativeToPeriod(Periods.Hour, aLogsReader.ClientConnectedDataDictionary, aLogsReader.ClientsDictionary);
+                    connectedClientsRelativeToPeriod = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours;
                     break;
             }
+
+            if (connectedClientsRelativeToPeriod == null || period == null)
+            {
+                return BadRequest("Error during processing");
+            }
+
+            connectedClientsRelativeToPeriod = FilterRelevantDataPeriod(connectedClientsRelativeToPeriod, period, relevantDateTime);
 
             if (Helpers.IsETagValid(connectedClientsRelativeToPeriod, Request, Response))
             {
@@ -94,6 +95,61 @@ namespace TeamspeakStatsNew.Controllers
 
             // Return the JSON data
             return Ok(json);
+        }
+
+        [HttpGet("allowed-range-relative-to")]
+        public ActionResult<string> GetAllowedRangeConnRelativeToPeriod()
+        {
+
+            if (aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours != null)
+            {
+                if (Helpers.IsETagValid(aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours, Request, HttpContext.Response))
+                {
+                    return StatusCode(StatusCodes.Status304NotModified);
+                }
+            }
+
+            if (aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours == null)
+            {
+                return BadRequest("Logs not year initialized");
+            }
+
+            DateTime minDate = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours.FirstOrDefault().Key;
+            DateTime maxDate = aLogsReader.aCountOfClientsRelativeToPeriod.DictionaryCountHours.LastOrDefault().Key;
+
+            // Return the data as usual
+            var json = JsonSerializer.Serialize(new[] { minDate, maxDate });
+
+            // Return the JSON data
+            return Ok(json);
+        }
+
+        public SortedDictionary<DateTime, int> FilterRelevantDataPeriod(SortedDictionary<DateTime, int> parDictionaryOfClients, string parPeriod, DateTime relevantDateTime)
+        {
+
+            string tmpPeriodFirstUpperCase = char.ToUpper(parPeriod[0]) + parPeriod.Substring(1);
+
+            Enum.TryParse(tmpPeriodFirstUpperCase, out Periods period);
+
+            return new SortedDictionary<DateTime, int>(parDictionaryOfClients.Where(x =>
+            {
+                switch (period)
+                {
+                    case Periods.Hour:
+                        return x.Key.Year == relevantDateTime.Year &&
+                               x.Key.Month == relevantDateTime.Month &&
+                               x.Key.Day == relevantDateTime.Day;
+                    case Periods.Day:
+                        return x.Key.Year == relevantDateTime.Year &&
+                               x.Key.Month == relevantDateTime.Month;
+                    case Periods.Month:
+                        return x.Key.Year == relevantDateTime.Year;
+                    case Periods.Year:
+                        return true;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }).ToDictionary(x => x.Key, x => x.Value));
         }
     }
 }

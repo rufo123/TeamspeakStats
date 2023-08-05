@@ -99,7 +99,7 @@ $dark-theme: mat.define-dark-theme((
     background-color: #3e5b4c !important;
   }
 
-  .mat-tooltip {
+  .tooltip-custom .mdc-tooltip__surface {
     background-color: rgba(255, 255, 255, 0.8) !important;
     color: #000000 !important;
   }
@@ -138,8 +138,9 @@ app-fetch-data .mat-button.active {
   color: white;
 }
 
-.mat-tooltip {
+.tooltip-custom .mdc-tooltip__surface {
   max-width: 600px !important;
+  font-size: 0.6em !important;
 }
 
 .active-nav {
@@ -147,4 +148,16 @@ app-fetch-data .mat-button.active {
   color: white !important;
 }
 
+.mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0px 0 9px 0;
+    height: 16px;
+}
 
+.dense-2 {
+  @include mat.all-component-densities(-2);
+}
+
+.custom-datepicker {
+  //@include mat.form-field-density(-2);
+  //@include mat.all-component-densities(minimum);
+}

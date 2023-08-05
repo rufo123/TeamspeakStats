@@ -22,12 +22,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\fetch-data\fetch-data.component.spec.ts" />
+    <None Remove="ClientApp\src\app\fetch-graphs\fetch-graph.component.spec.ts" />
+    <None Remove="ClientApp\src\app\home\home.component.spec.ts" />
+    <None Remove="ClientApp\src\app\nav-menu\nav-menu.component.spec.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\pipes\" />
     <Folder Include="ClientApp\src\app\services\theme\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\fetch-data\fetch-data.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\fetch-graphs\fetch-graph.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\home\home.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\nav-menu\nav-menu.component.spec.ts" />
   </ItemGroup>
 
   <ItemGroup>

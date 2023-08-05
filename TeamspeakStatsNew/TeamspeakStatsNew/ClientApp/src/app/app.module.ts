@@ -10,9 +10,7 @@ import { HomeComponent } from "./home/home.component";
 import { CounterComponent } from "./counter/counter.component";
 import { FetchDataComponent } from "./fetch-data/fetch-data.component";
 import { DateService } from "./services/date/date.service";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatLegacyFormFieldModule as MatFormFieldModule } from "@angular/material/legacy-form-field";
-import { MatNativeDateModule } from "@angular/material/core";
+import { DateAdapter, MatNativeDateModule } from "@angular/material/core";
 import { ThemeService } from "./services/theme/theme.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DateFormatPipe } from "./pipes/date-format.pipe";
@@ -26,15 +24,20 @@ import {
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatBadgeModule } from "@angular/material/badge";
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from "@angular/material/legacy-slide-toggle";
-import { MatLegacySliderModule as MatSliderModule } from "@angular/material/legacy-slider";
-import { MatLegacyTooltipModule as MatTooltipModule } from "@angular/material/legacy-tooltip";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSliderModule } from "@angular/material/slider";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatMenuModule } from "@angular/material/menu";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-card";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { SwitchableRangeDatePickerComponent } from "./switchable-range-date-picker/switchable-range-date-picker.component";
+import { SwitchableDatePickerFormatService } from "./services/switchable-date-picker-format/switchable-date-picker-format-service.service";
 
 @NgModule({
     declarations: [
@@ -45,6 +48,8 @@ import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-c
         FetchDataComponent,
         FetchGraphsComponent,
         DateFormatPipe,
+
+        SwitchableRangeDatePickerComponent,
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
@@ -70,6 +75,7 @@ import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-c
         MatFormFieldModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatInputModule,
 
         NgChartsModule,
 
@@ -80,7 +86,12 @@ import { MatLegacyCardModule as MatCardModule } from "@angular/material/legacy-c
             { path: "graphs", component: FetchGraphsComponent },
         ]),
     ],
-    providers: [DateService, ThemeService, DatePipe],
+    providers: [
+        DateService,
+        ThemeService,
+        DatePipe,
+        SwitchableDatePickerFormatService,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

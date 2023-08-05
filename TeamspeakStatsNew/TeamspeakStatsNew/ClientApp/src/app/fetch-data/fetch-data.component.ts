@@ -57,14 +57,7 @@ export class FetchDataComponent {
 
         this.sortData();
 
-        this.stats$ = interval(5000).pipe(
-            startWith(0),
-            switchMap(() => this.httpGetAndFormatStats()),
-            distinctUntilChanged(
-                (x, y) => JSON.stringify(x) === JSON.stringify(y)
-            ),
-            map((stats) => this.sort(this.sortedBy, stats, false))
-        );
+        this.stats$ = this.startStatsInterval();
 
         this.stats$.subscribe((stats) => {
             if (JSON.stringify(stats) !== JSON.stringify(this.stats)) {
@@ -77,6 +70,17 @@ export class FetchDataComponent {
                 this.stats = this.sort(this.sortedBy, this.stats, false);
             }
         });
+    }
+
+    private startStatsInterval(): Observable<Stats[]> {
+        return interval(5000).pipe(
+            startWith(0),
+            switchMap(() => this.httpGetAndFormatStats()),
+            distinctUntilChanged(
+                (x, y) => JSON.stringify(x) === JSON.stringify(y)
+            ),
+            map((stats) => this.sort(this.sortedBy, stats, false))
+        );
     }
 
     sortData(sortBy: string = SortTime.AllTime) {

@@ -52,6 +52,10 @@ export class ThemeService {
         this.setThemeCharts();
     }
 
+    getTheme() {
+        return this._theme.value;
+    }
+
     setThemeCharts() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let overrides: ChartOptions<any>;
@@ -88,9 +92,6 @@ export class ThemeService {
                 scales: undefined,
             };
         }
-
-        console.log(overrides);
-
         this.chartsThemeService.setColorschemesOptions(overrides);
     }
 

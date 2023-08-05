@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .chart-container {
   height: 100%;
   display: flex;
@@ -35,3 +37,23 @@
 .mat-button.active {
   background-color: var(--bs-purple) !important;
 }
+
+.toolbar-range-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+mat-divider {
+  height: 64px;
+  margin: 0 1em;
+}
+
+.toolbar-range-options {
+  justify-content: center;
+}
+
+.mat-button.active {
+  color: white;
+}
+
+

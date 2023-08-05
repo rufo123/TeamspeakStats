@@ -12,7 +12,15 @@ builder.Services.AddSingleton<LogsReader>(new LogsReader());
 builder.Services.AddSingleton<FolderMonitor>(provider =>
 {
     LogsReader? logsReader = provider.GetService<LogsReader>();
-    return new FolderMonitor(logsReader!.LogsPath, () => logsReader.ReadLogs(logsReader.LogsPath));
+    return new FolderMonitor(logsReader!.LogsPath, () =>
+    {
+        logsReader.ReadLogs(logsReader.LogsPath);
+        if (logsReader.ClientConnectedDataDictionary != null && logsReader.ClientsDictionary != null)
+        {
+            logsReader.aCountOfClientsRelativeToPeriod.Initialise(logsReader.ClientConnectedDataDictionary,
+                logsReader.ClientsDictionary);
+        }
+    });
 });
 
 var app = builder.Build();
