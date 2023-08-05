@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Numerics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace TeamspeakStatsNew.Backend
@@ -17,23 +15,27 @@ namespace TeamspeakStatsNew.Backend
         public Dictionary<int, Client>? ClientsDictionary => aClientsDictionary;
         public Dictionary<int, ClientConnectedData>? ClientConnectedDataDictionary => aClientConnectedDataDictionary;
 
+        public CountOfClientsRelativeToPeriod aCountOfClientsRelativeToPeriod;
+
         public string LogsPath => aLogsPath;
 
         public LogsReader()
         {
             aClientsDictionary = null;
             aClientConnectedDataDictionary = null;
+            aCountOfClientsRelativeToPeriod = new CountOfClientsRelativeToPeriod();
             aLogsPath = File.ReadAllText("Configuration/logs_path.txt");
             aMergedIdsDictionary = CreateMergedIdsDictionary(ReadMergedIds());
             aBotsHashSet = ReadBots();
 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
             ReadLogs(aLogsPath);
-            stopwatch.Stop();
+            if (aClientConnectedDataDictionary != null && ClientsDictionary != null)
+            {
+                aCountOfClientsRelativeToPeriod.Initialise(aClientConnectedDataDictionary, ClientsDictionary);
+            }
 
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-            Debug.WriteLine($"Execution time: {elapsedTime}");
+
+
         }
 
         public HashSet<int> ReadBots()
@@ -166,7 +168,6 @@ namespace TeamspeakStatsNew.Backend
                                             AddClient(Int32.Parse(id), name, clientDictionaryTmp, clientConnectedDataDictionaryTmp);
 
                                             Client? client = GetClient(Int32.Parse(id), clientDictionaryTmp);
-
 
                                             if (action == "connected")
                                             {

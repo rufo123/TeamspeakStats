@@ -1,5 +1,7 @@
 import { ApplicationRef, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { ChartOptions } from "chart.js";
+import { ThemeService as ChartsThemeService } from "ng2-charts";
 
 export type Theme = "theme-light" | "theme-dark";
 
@@ -11,7 +13,10 @@ export class ThemeService {
         new BehaviorSubject<Theme>("theme-dark");
     readonly theme$ = this._theme.asObservable();
 
-    constructor(private ref: ApplicationRef) {
+    constructor(
+        private ref: ApplicationRef,
+        private chartsThemeService: ChartsThemeService
+    ) {
         // If dark mode is enabled then directly switch to the dark-theme
         const darkModeOn =
             window.matchMedia &&
@@ -44,6 +49,50 @@ export class ThemeService {
     setTheme(theme: Theme) {
         this._theme.next(theme);
         localStorage.setItem("theme", theme);
+        this.setThemeCharts();
+    }
+
+    getTheme() {
+        return this._theme.value;
+    }
+
+    setThemeCharts() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let overrides: ChartOptions<any>;
+        if (this._theme.value === "theme-dark") {
+            overrides = {
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "white",
+                        },
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.05)",
+                        },
+                    },
+                    y: {
+                        ticks: {
+                            color: "white",
+                        },
+                        grid: {
+                            color: "rgba(255, 255, 255, 0.05)",
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "white",
+                        },
+                    },
+                },
+            };
+        } else {
+            overrides = {
+                scales: undefined,
+            };
+        }
+        this.chartsThemeService.setColorschemesOptions(overrides);
     }
 
     toggleTheme() {
@@ -51,5 +100,6 @@ export class ThemeService {
             this._theme.value === "theme-light" ? "theme-dark" : "theme-light"
         );
         localStorage.setItem("theme", this._theme.value);
+        this.setThemeCharts();
     }
 }

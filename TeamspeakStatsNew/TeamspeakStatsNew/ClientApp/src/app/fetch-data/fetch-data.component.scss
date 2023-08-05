@@ -20,7 +20,7 @@
 }
 
 .toolbar-sort-left {
-    width: 100%;
+  width: 100%;
   display: flex;
   justify-content: left;
 }
@@ -44,19 +44,40 @@
 
   .mat-button.active {
     color: white;
-    }
+  }
 }
 
 .mat-button.active {
-  background-color: var(--bs-indigo) !important;
+  background-color: var(--bs-purple) !important;
 }
 
 mat-spinner {
   border-top: none !important;
-
 }
 
 .spinner-container {
   justify-content: center;
   display: flex;
 }
+
+.table {
+    margin-bottom: 3.5em;
+}
+
+$base-font-size: 1rem; // Base font size for the table
+$max-width: 464px; // Maximum screen width
+
+.table {
+  font-size: $base-font-size; // Set the base font size
+  transition: font-size 0.3s ease; // Transition effect for font size change
+}
+
+/* Media query for screens with width below the maximum width */
+@media screen and (max-width: $max-width) {
+  .table {
+    font-size: 0.7rem;
+  }
+}
+
+
+

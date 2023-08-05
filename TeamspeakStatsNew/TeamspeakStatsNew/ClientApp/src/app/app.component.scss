@@ -2,5 +2,76 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+span {
+  flex: 1;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.title-left-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-right-col {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.hr-divider {
+  margin: 0.5em !important;
+  height: 0 !important;
+}
+
+.toolbar-navigation {
+  justify-content: space-around;
+  height: 3em;
+}
+
+.button-divider {
+  width: 1em;
+}
+
+.active-route-button {
+}
+
+.active-route-button .mat-icon {
+  color: var(--bs-indigo) !important;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: darken(#fff, 2%);
+  padding: 10px 0;
+}
+
+.container {
+  text-align: center;
+}
+
+p {
+  margin: 0;
+}
+
+.mat-menu-custom .mat-mdc-menu-item-text {
+  font-size: 0.9em !important;
 }
 

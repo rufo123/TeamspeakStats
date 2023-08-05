@@ -1,0 +1,19 @@
+
+
+<mat-form-field *ngIf="!disabled">
+  <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="date" [min]="min" [max]="max">
+  <mat-hint>{{getLabel()}}</mat-hint>
+  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+  <mat-datepicker #dp
+                  startView="multi-year"
+                  (yearSelected)="chosenYearHandler($event, dp)"
+                  (monthSelected)="chosenMonthHandler($event, dp)"
+                  panelClass="example-month-picker"
+                  (closed)="updateDateEvent()"
+  >
+  </mat-datepicker>
+</mat-form-field>
+
+<div class="disabled-wrapper" *ngIf="disabled">
+  Disabled
+</div>

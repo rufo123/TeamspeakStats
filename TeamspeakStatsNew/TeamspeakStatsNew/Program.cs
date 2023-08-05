@@ -8,13 +8,19 @@ builder.Services.AddControllersWithViews();
 
 // Add the folder monitoring service
 
-LogsReader logsReaderSingle = new LogsReader();
-builder.Services.AddSingleton<LogsReader>(logsReaderSingle);
+builder.Services.AddSingleton<LogsReader>(new LogsReader());
 builder.Services.AddSingleton<FolderMonitor>(provider =>
 {
     LogsReader? logsReader = provider.GetService<LogsReader>();
-    FolderMonitor monitor = new FolderMonitor(logsReader!.LogsPath, () => logsReader.ReadLogs(logsReader.LogsPath));
-    return monitor;
+    return new FolderMonitor(logsReader!.LogsPath, () =>
+    {
+        logsReader.ReadLogs(logsReader.LogsPath);
+        if (logsReader.ClientConnectedDataDictionary != null && logsReader.ClientsDictionary != null)
+        {
+            logsReader.aCountOfClientsRelativeToPeriod.Initialise(logsReader.ClientConnectedDataDictionary,
+                logsReader.ClientsDictionary);
+        }
+    });
 });
 
 var app = builder.Build();

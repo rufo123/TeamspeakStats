@@ -9,7 +9,7 @@
         private double aHoursTotal;
         private bool aBot;
         private bool aOnline;
-        private List<DateTime[]> aConnectedDates;
+        //private List<DateTime[]> aConnectedDates;
 
         public Client(int parId)
         {
@@ -19,7 +19,7 @@
             aHoursTotal = 0;
             aBot = false;
             aOnline = false;
-            aConnectedDates = new List<DateTime[]>();
+            //aConnectedDates = new List<DateTime[]>();
         }
 
 
@@ -37,7 +37,7 @@
             if (parDisconnectedTime >= LastConnected)
             {
                 aHoursTotal += (parDisconnectedTime - LastConnected).TotalHours;
-                aConnectedDates.Add(new DateTime[] { parDisconnectedTime, LastConnected });
+                //aConnectedDates.Add(new DateTime[] { parDisconnectedTime, LastConnected });
             }
         }
 
@@ -84,6 +84,6 @@
             set => aOnline = value;
         }
 
-        public List<DateTime[]> ConnectedDates => aConnectedDates;
+        // public List<DateTime[]> ConnectedDates => aConnectedDates;
     }
 }

@@ -1,5 +1,3 @@
-<p>TeamSpeak stats for RFTS by @rufo123.</p>
-
 <p *ngIf="!stats$">
   <em>Loading...</em>
 </p>
@@ -16,7 +14,7 @@
   </div>
 </mat-toolbar>
 
-<table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
+<table mat-table class="table table-striped" aria-labelledby="tableLabel" *ngIf="stats$">
   <thead>
     <tr>
       <th (click)="sort('id', stats)">

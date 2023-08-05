@@ -1,12 +1,15 @@
 import { Pipe, PipeTransform } from "@angular/core";
 import * as moment from "moment-timezone";
+import { interval, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Pipe({
     name: "dateFormat",
     pure: false,
 })
 export class DateFormatPipe implements PipeTransform {
-    private shouldUpdateView = true;
+    private destroy$ = new Subject<void>();
+    private shouldUpdateView = false;
 
     transform(dateStr: Date, timezone = "UTC"): string {
         const date = moment.tz(dateStr, timezone);
@@ -57,9 +60,20 @@ export class DateFormatPipe implements PipeTransform {
         }
     }
 
-    private toggleShouldUpdateView(): void {
+    toggleShouldUpdateView() {
         this.shouldUpdateView = !this.shouldUpdateView;
-        setTimeout(() => this.toggleShouldUpdateView(), 1000);
+
+        if (this.shouldUpdateView) {
+            interval(1000).pipe(takeUntil(this.destroy$));
+        } else {
+            this.destroy$.next();
+            this.destroy$.complete();
+        }
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     constructor() {

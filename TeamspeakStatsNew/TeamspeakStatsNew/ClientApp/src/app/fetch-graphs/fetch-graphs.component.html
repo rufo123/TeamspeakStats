@@ -1,0 +1,60 @@
+<mat-card>
+  <div class="chart-container">
+    <canvas baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [type]="'bar'">
+    </canvas>
+  </div>
+</mat-card>
+
+<mat-toolbar class="toolbar-range-options">
+
+  <div class="toolbar-range-wrapper">
+
+    <button mat-mini-fab mat-button color="primary" (click)="moveDate(1)" [disabled]="isDatePickerDisabled()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+
+    <mat-divider vertical></mat-divider>
+
+
+    <div class="custom-datepicker">
+      <app-switchable-range-date-picker
+        (newDateEvent)="updateRelevantDate($event)"
+        [inputFormat]="format"
+        [inputDate]="this.relevantDate"
+        [disabled]="isDatePickerDisabled()"
+        [min]="minDate"
+        [max]="maxDate"
+        ></app-switchable-range-date-picker>
+    </div>
+
+    <mat-divider vertical></mat-divider>
+
+
+    <button mat-mini-fab mat-button color="primary" (click)="moveDate(2)" [disabled]="isDatePickerDisabled()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+  </div>
+
+
+</mat-toolbar>
+
+<mat-toolbar class="toolbar-sort-by-time">
+  <div class="toolbar-sort-left">
+    <span class="sort-label">Sort by:</span>
+  </div>
+  <div class="toolbar-sort-right">
+    <span class="spacer"></span>
+    <button mat-button [class.active]="activeSorting === 'year'" (click)="getGraphDataLatest('year')" [disabled]="isSorting">Year</button>
+    <button mat-button [class.active]="activeSorting === 'month'" (click)="getGraphDataLatest('month')" [disabled]="isSorting">Month</button>
+    <button mat-button [class.active]="activeSorting === 'day'" (click)="getGraphDataLatest('day')" [disabled]="isSorting">Day</button>
+    <button mat-button [class.active]="activeSorting === 'hour'" (click)="getGraphDataLatest('hour')" [disabled]="isSorting">Hour</button>
+  </div>
+</mat-toolbar>
+
