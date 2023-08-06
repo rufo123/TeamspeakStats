@@ -31,7 +31,7 @@ jobs:
       run: ls -R
     - name: TESTA
       run: |
-        cd ../TeamspeakStatsNew/TeamspeakStatsNew
+        cd ./TeamspeakStatsNew/TeamspeakStatsNew
         npm ci
     - name: Install Dependencies
       working-directory: TeamspeakStatsNew
