@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: TeamspeakStatsNew\TeamspeakStatsNew
+        working-directory: ng-toolkit 
 
     strategy:
       matrix:
