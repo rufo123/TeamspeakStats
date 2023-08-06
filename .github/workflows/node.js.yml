@@ -30,7 +30,6 @@ jobs:
     - name: Show Directory Contents
       run: |
         ls -R TeamspeakStatsNew
-        ls -R TeamspeakStatsNew/TeamspeakStatsNew
     - name: Install Dependencies
       working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm ci
