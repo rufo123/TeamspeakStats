@@ -27,6 +27,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: TeamspeakStatsNew/TeamspeakStatsNew/package-lock.json
+    - name: Show Directory Contents
+      run: |
+        ls -R TeamspeakStats
+        ls -R TeamspeakStats/TeamspeakStatsNew
+        ls -R TeamspeakStats/TeamspeakStatsNew/TeamspeakStatsNew
     - name: Install Dependencies
       working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm ci
