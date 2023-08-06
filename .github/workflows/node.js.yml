@@ -28,14 +28,14 @@ jobs:
         cache: 'npm'
         cache-dependency-path: TeamspeakStatsNew/TeamspeakStatsNew/package-lock.json
     - name: Install Dependencies
-      working-directory: TeamspeakStats/TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm ci
     - name: Build
-      working-directory: TeamspeakStats/TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm run build --if-present
     - name: Test
-      working-directory: TeamspeakStats/TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm run test:prod
     - name: Lint
-      working-directory: TeamspeakStats/TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
       run: npm run lint
