@@ -31,14 +31,14 @@ jobs:
       run: |
         ls -R TeamspeakStatsNew
     - name: Install Dependencies
-      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew
       run: npm ci
     - name: Build
-      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew
       run: npm run build --if-present
     - name: Test
-      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew
       run: npm run test:prod
     - name: Lint
-      working-directory: TeamspeakStatsNew/TeamspeakStatsNew
+      working-directory: TeamspeakStatsNew
       run: npm run lint
