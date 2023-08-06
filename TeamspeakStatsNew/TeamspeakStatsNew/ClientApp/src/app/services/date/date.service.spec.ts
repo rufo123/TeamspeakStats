@@ -82,8 +82,7 @@ describe("DateService", () => {
 
     it("should return 1 month and 1 day ago", () => {
         const date = new Date();
-        date.setMonth(date.getMonth() - 1); // 1 month ago
-        date.setDate(date.getDate() - 1); // 1 day ago
+        date.setDate(date.getDate() - 31);
         const formattedDate = service.format(date);
         expect(formattedDate).toBe("1 month and 1 day ago");
     });

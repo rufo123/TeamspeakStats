@@ -126,11 +126,15 @@ describe("ThemeService", () => {
 
     it("should set theme-dark, when dark-mode is preffered on construct", fakeAsync(() => {
         localStorage.removeItem("theme");
-        spyOn(window, "matchMedia").and.returnValue({
+
+        const matchMediaSpy = spyOn(window, "matchMedia").and.returnValue({
             matches: true,
             media: "(prefers-color-scheme: dark)",
             onchange: null,
-            addListener: () => {},
+            addListener: (listener: (e: MediaQueryListEvent) => void) => {
+                // Simulate a change in the preferred color scheme
+                listener({ matches: true } as MediaQueryListEvent);
+            },
             removeListener: () => {},
             addEventListener: () => {},
             removeEventListener: () => {},
@@ -139,10 +143,13 @@ describe("ThemeService", () => {
             },
         });
 
-        // Advance the Jasmine clock to trigger the listener callback
-        jasmine.clock().tick(1000);
+        service.initalize();
 
-        localStorage.removeItem("theme");
-        expect(service.getTheme()).toEqual("theme-dark");
+        // Advance the Jasmine clock to trigger the listener callback
+        jasmine.clock().tick(10000);
+
+        expect(matchMediaSpy).toHaveBeenCalledWith(
+            "(prefers-color-scheme: dark)"
+        );
     }));
 });

@@ -97,10 +97,7 @@ describe("DateFormatPipe", () => {
 
     it("should transform date to 1 month and 1 day ago", () => {
         const currentDate = moment();
-        const date = currentDate
-            .clone()
-            .subtract(1, "month")
-            .subtract(1, "day");
+        const date = currentDate.clone().subtract(31, "day");
         const formattedDate = pipe.transform(date.toDate());
         expect(formattedDate).toBe("1 month and 1 day ago");
     });

@@ -17,7 +17,10 @@ export class ThemeService {
         private ref: ApplicationRef,
         private chartsThemeService: ChartsThemeService
     ) {
-        // If dark mode is enabled then directly switch to the dark-theme
+        this.initalize();
+    }
+
+    initalize() {
         const darkModeOn =
             window.matchMedia &&
             window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -40,7 +43,6 @@ export class ThemeService {
             const turnOn = e.matches;
             this._theme.next(turnOn ? "theme-dark" : "theme-light");
             localStorage.setItem("theme", this._theme.value);
-
             // Trigger refresh of UI
             this.ref.tick();
         });
