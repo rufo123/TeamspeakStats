@@ -28,8 +28,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: TeamspeakStatsNew/TeamspeakStatsNew/package-lock.json
     - name: Show Directory Contents
-      run: |
-        ls -R TeamspeakStatsNew
+      run: ls -R
     - name: Install Dependencies
       working-directory: TeamspeakStatsNew
       run: npm ci
