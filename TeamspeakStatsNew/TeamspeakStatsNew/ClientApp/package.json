@@ -10,7 +10,9 @@
     "build": "ng build",
     "build:ssr": "ng run TeamspeakStatsNew:server:dev",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build_prod": "ng build --prod",
+    "test_prod": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
   },
   "private": true,
   "dependencies": {
