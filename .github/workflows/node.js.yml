@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: TeamspeakStats\TeamspeakStatsNew\TeamspeakStatsNew
+        working-directory: TeamspeakStatsNew\TeamspeakStatsNew
 
     strategy:
       matrix:
