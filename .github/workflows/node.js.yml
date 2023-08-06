@@ -42,7 +42,7 @@ jobs:
     - name: Test
       run: |
         cd ./TeamspeakStatsNew/TeamspeakStatsNew/ClientApp
-        npm run test:prod
+        npm run test_prod
     - name: Lint
       run: |
         cd ./TeamspeakStatsNew/TeamspeakStatsNew/ClientApp
