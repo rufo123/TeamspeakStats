@@ -231,6 +231,8 @@ describe("FetchDataComponent", () => {
         component.sortData(SortTime.AllTime);
         const date = new Date();
         date.setFullYear(1);
+        date.setMilliseconds(0);
+        component.dateToCountHoursFrom.setMilliseconds(0);
         expect(component.dateToCountHoursFrom).toEqual(date);
     });
 
@@ -428,6 +430,14 @@ describe("FetchDataComponent", () => {
         expect(component.sortedBy).toBe("id");
         expect(component.sortDirection).toBe(1);
     });
+
+    function removeMsFromISOString(ISOstring: string): string {
+        const indexOfDot = ISOstring.indexOf(".");
+        if (indexOfDot !== -1) {
+            return ISOstring.substring(0, indexOfDot) + "Z";
+        }
+        return ISOstring;
+    }
 
     interface Stats {
         id: number;
