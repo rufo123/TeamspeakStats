@@ -61,8 +61,12 @@ describe("VymazatComponent", () => {
 
     it("should get current time as ISO string", () => {
         const currentDate: Date = new Date();
-        const currentDateISO = currentDate.toISOString();
-        expect(component.getCurrentTimeAsIsoString()).toBe(currentDateISO);
+        const currentDateISO = removeMsFromISOString(currentDate.toISOString());
+        const returnedISOString = removeMsFromISOString(
+            component.getCurrentTimeAsIsoString()
+        );
+
+        expect(returnedISOString).toBe(currentDateISO);
     });
 
     it("should get graph data latest sorted by month", () => {
@@ -176,6 +180,14 @@ describe("VymazatComponent", () => {
         component.setEtag("new-etag");
         expect(localStorageMock["stats-etag"]).toBe("new-etag");
     });
+
+    function removeMsFromISOString(ISOstring: string): string {
+        const indexOfDot = ISOstring.indexOf(".");
+        if (indexOfDot !== -1) {
+            return ISOstring.substring(0, indexOfDot) + "Z";
+        }
+        return ISOstring;
+    }
 
     enum SortTime {
         Year = "year",
