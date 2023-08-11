@@ -90,19 +90,24 @@ export class FetchGraphsComponent implements OnInit {
         const date: Date = new Date(this.relevantDate);
         switch (direction) {
             case Direction.Left:
-                if (date < this.minDate) {
+                if (this.compareDatesNoTime(date, this.minDate) !== 1) {
+                    // If the date is < this.minDate
                     return;
                 }
                 moveByAmount = -1;
                 break;
             case Direction.Right:
-                if (date >= this.maxDate) {
+                if (this.compareDatesNoTime(date, this.maxDate) !== -1) {
+                    // If the date is > this.maxDate
                     return;
                 }
                 moveByAmount = 1;
                 break;
             default:
         }
+
+        console.log(date);
+        console.log(this.maxDate);
 
         switch (this.activeSorting) {
             case SortTime.Hour:
@@ -216,7 +221,43 @@ export class FetchGraphsComponent implements OnInit {
         if (event.toISOString() !== this.previousDate) {
             this.getGraphData(this.activeSorting, this.relevantDate);
             this.previousDate = this.relevantDate;
+            console.log(this.maxDate);
+            console.log(this.relevantDate);
         }
+    }
+
+    private compareDatesNoTime(date1: Date, date2: Date): number {
+        const compareYears = this.compareNumber(
+            date1.getFullYear(),
+            date2.getFullYear()
+        );
+
+        if (compareYears === 0) {
+            const compareMonths = this.compareNumber(
+                date1.getMonth(),
+                date2.getMonth()
+            );
+
+            if (compareMonths === 0) {
+                return this.compareNumber(date1.getDate(), date2.getDate());
+            }
+
+            return compareMonths;
+        }
+
+        return compareYears;
+    }
+
+    private compareNumber(number1: number, number2: number): number {
+        if (number1 < number2) {
+            return -1;
+        }
+
+        if (number1 > number2) {
+            return 1;
+        }
+
+        return 0;
     }
 }
 
