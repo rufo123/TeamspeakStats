@@ -152,4 +152,14 @@ describe("ThemeService", () => {
             "(prefers-color-scheme: dark)"
         );
     }));
+
+    it("should get theme-light, when it is set correctly", fakeAsync(() => {
+        service.setTheme("theme-light");
+        expect(service.getTheme()).toBe("theme-light");
+    }));
+
+    it("should get theme-dark, when it is set correctly", fakeAsync(() => {
+        service.setTheme("theme-dark");
+        expect(service.getTheme()).toBe("theme-dark");
+    }));
 });

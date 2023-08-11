@@ -2,6 +2,8 @@ import { TestBed } from "@angular/core/testing";
 
 import { DateService } from "./date.service";
 
+import * as moment from "moment";
+
 describe("DateService", () => {
     let service: DateService;
 
@@ -75,21 +77,31 @@ describe("DateService", () => {
 
     it("should return months and days ago", () => {
         const date = new Date();
-        date.setMonth(date.getMonth() - 6); // 4 months ago
+        date.setMonth(date.getMonth() - 4); // 4 months ago
+
         const formattedDate = service.format(date);
-        expect(formattedDate).toBe("6 months and 0 days ago");
+        expect(formattedDate).toBe("4 months and 0 days ago");
     });
 
     it("should return 1 month and 1 day ago", () => {
         const date = new Date();
-        date.setDate(date.getDate() - 31);
+        date.setMonth(date.getMonth() - 1);
+
+        if (getDaysInMonth(date.getFullYear(), date.getMonth() - 1) === 31) {
+            date.setDate(date.getDate());
+        } else {
+            date.setDate(date.getDate() - 1);
+        }
+
         const formattedDate = service.format(date);
         expect(formattedDate).toBe("1 month and 1 day ago");
     });
 
     it("should return 1 years and months ago", () => {
         const date = new Date();
+
         date.setFullYear(date.getFullYear() - 1); // 1 year ago
+
         const formattedDate = service.format(date);
         expect(formattedDate).toBe("1 year and 0 months ago");
     });
@@ -101,4 +113,22 @@ describe("DateService", () => {
         const formattedDate = service.format(date);
         expect(formattedDate).toBe("2 years and 1 month ago");
     });
+
+    it("should return just now, if just few miliseconds passes", () => {
+        const date = new Date();
+        date.setMilliseconds(date.getMilliseconds() - 1); // 2 years ago
+        const formattedDate = service.format(date);
+        expect(formattedDate).toBe("Just now");
+    });
+
+    it("should return just now, if time is in the future", () => {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() + 1); // 2 years ago
+        const formattedDate = service.format(date);
+        expect(formattedDate).toBe("Just now");
+    });
+
+    function getDaysInMonth(year: number, month: number) {
+        return new Date(year, month, 0).getDate();
+    }
 });

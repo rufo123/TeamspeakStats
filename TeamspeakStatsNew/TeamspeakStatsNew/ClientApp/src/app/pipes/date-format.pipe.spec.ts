@@ -41,14 +41,14 @@ describe("DateFormatPipe", () => {
         expect(formattedDate).toBe("4 days and 0 hours ago");
     });
 
-    it("should transform date to 2 months and 3 days ago", () => {
+    it("should transform date to 2 months and 2 days ago", () => {
         const currentDate = moment();
         const date = currentDate
             .clone()
             .subtract(2, "months")
             .subtract(2, "days"); // This is intended
         const formattedDate = pipe.transform(date.toDate());
-        expect(formattedDate).toBe("2 months and 3 days ago");
+        expect(formattedDate).toBe("2 months and 2 days ago");
     });
 
     it("should transform date to 4 years and 6 months ago", () => {
@@ -92,12 +92,18 @@ describe("DateFormatPipe", () => {
         const currentDate = moment();
         const date = currentDate.clone().subtract(1, "day").subtract(1, "hour");
         const formattedDate = pipe.transform(date.toDate());
+
         expect(formattedDate).toBe("1 day and 1 hour ago");
     });
 
     it("should transform date to 1 month and 1 day ago", () => {
         const currentDate = moment();
-        const date = currentDate.clone().subtract(31, "day");
+        const date = currentDate.clone().subtract(1, "month");
+
+        if (date.daysInMonth() === 30) {
+            date.subtract(1, "day");
+        }
+
         const formattedDate = pipe.transform(date.toDate());
         expect(formattedDate).toBe("1 month and 1 day ago");
     });
@@ -110,6 +116,27 @@ describe("DateFormatPipe", () => {
             .subtract(1, "month");
         const formattedDate = pipe.transform(date.toDate());
         expect(formattedDate).toBe("1 year and 1 month ago");
+    });
+
+    it("should return just now, if just few miliseconds passes", () => {
+        const currentDate = moment();
+        const date = currentDate.clone().subtract(1, "millisecond");
+        const formattedDate = pipe.transform(date.toDate());
+        expect(formattedDate).toBe("Just now");
+    });
+
+    it("should return just now, if time is in the future", () => {
+        const currentDate = moment();
+        const date = currentDate.clone().add(1, "millisecond");
+        const formattedDate = pipe.transform(date.toDate());
+        expect(formattedDate).toBe("Just now");
+    });
+
+    it("should return 1 years and months ago", () => {
+        const currentDate = moment();
+        const date = currentDate.clone().subtract(1, "year");
+        const formattedDate = pipe.transform(date.toDate());
+        expect(formattedDate).toBe("1 year and 0 months ago");
     });
 
     it("should update the view every second", fakeAsync(() => {
@@ -149,6 +176,4 @@ describe("DateFormatPipe", () => {
 
         expect(spyComplete).toHaveBeenCalled();
     });
-
-    // Add more test cases for the remaining scenarios
 });
