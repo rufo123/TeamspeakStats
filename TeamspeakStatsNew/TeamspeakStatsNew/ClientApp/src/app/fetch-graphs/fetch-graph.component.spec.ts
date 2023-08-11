@@ -60,9 +60,9 @@ describe("VymazatComponent", () => {
     });
 
     it("should get current time as ISO string", () => {
-        expect(component.getCurrentTimeAsIsoString()).toBe(
-            new Date().toISOString()
-        );
+        const currentDate: Date = new Date();
+        const currentDateISO = currentDate.toISOString();
+        expect(component.getCurrentTimeAsIsoString()).toBe(currentDateISO);
     });
 
     it("should get graph data latest sorted by month", () => {
