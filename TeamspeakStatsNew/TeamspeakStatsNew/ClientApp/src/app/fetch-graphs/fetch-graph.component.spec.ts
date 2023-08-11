@@ -6,7 +6,7 @@ import { Observable, of } from "rxjs";
 import { FormatTypes } from "../services/switchable-date-picker-format/switchable-date-picker-format-service.service";
 import { FetchGraphsComponent } from "./fetch-graphs.component";
 
-describe("VymazatComponent", () => {
+describe("FetchGraphsComponent", () => {
     let component: FetchGraphsComponent;
     let fixture: ComponentFixture<FetchGraphsComponent>;
     let localStorageMock: { [key: string]: string } = {};
@@ -93,8 +93,10 @@ describe("VymazatComponent", () => {
     it("should move date by one day to the back", () => {
         component.activeSorting = SortTime.Hour;
         const date = new Date();
+        component.minDate = new Date(date.getTime());
+        component.minDate.setFullYear(date.getDate() - 1);
         component.relevantDate = date.toISOString();
-        component.moveDate(1);
+        component.moveDate(Direction.Left);
         date.setDate(date.getDate() - 1);
         const newDate = date.toISOString();
         expect(component.relevantDate).toBe(newDate);
@@ -103,8 +105,10 @@ describe("VymazatComponent", () => {
     it("should move date by one day to the front", () => {
         component.activeSorting = SortTime.Hour;
         const date = new Date();
+        component.maxDate = new Date(date.getTime());
+        component.maxDate.setDate(date.getDate() + 1);
         component.relevantDate = date.toISOString();
-        component.moveDate(2);
+        component.moveDate(Direction.Right);
         date.setDate(date.getDate() + 1);
         const newDate = date.toISOString();
         expect(component.relevantDate).toBe(newDate);
@@ -117,7 +121,7 @@ describe("VymazatComponent", () => {
         minDate.setHours(minDate.getHours() + 1);
         component.minDate = minDate;
         component.relevantDate = date.toISOString();
-        component.moveDate(1);
+        component.moveDate(Direction.Left);
         expect(component.relevantDate).toBe(date.toISOString());
     });
 
@@ -127,15 +131,17 @@ describe("VymazatComponent", () => {
         const maxDate = new Date(date);
         component.maxDate = maxDate;
         component.relevantDate = date.toISOString();
-        component.moveDate(2);
+        component.moveDate(Direction.Right);
         expect(component.relevantDate).toBe(date.toISOString());
     });
 
     it("should move date by one month to the back", () => {
         component.activeSorting = SortTime.Day;
         const date = new Date();
+        component.minDate = new Date(date.getTime());
+        component.minDate.setMonth(date.getMonth() - 1);
         component.relevantDate = date.toISOString();
-        component.moveDate(1);
+        component.moveDate(Direction.Left);
         date.setMonth(date.getMonth() - 1);
         const newDate = date.toISOString();
         expect(component.relevantDate).toBe(newDate);
@@ -143,9 +149,11 @@ describe("VymazatComponent", () => {
 
     it("should move date by one year to the back", () => {
         component.activeSorting = SortTime.Month;
-        const date = new Date();
+        const date: Date = new Date();
+        component.minDate = new Date(date.getTime());
+        component.minDate.setFullYear(date.getFullYear() - 1);
         component.relevantDate = date.toISOString();
-        component.moveDate(1);
+        component.moveDate(Direction.Left);
         date.setFullYear(date.getFullYear() - 1);
         const newDate = date.toISOString();
         expect(component.relevantDate).toBe(newDate);
@@ -155,7 +163,7 @@ describe("VymazatComponent", () => {
         component.activeSorting = SortTime.Year;
         const date = new Date();
         component.relevantDate = date.toISOString();
-        component.moveDate(0);
+        component.moveDate(Direction.None);
         expect(component.relevantDate).toBe(date.toISOString());
     });
 
@@ -194,5 +202,11 @@ describe("VymazatComponent", () => {
         Month = "month",
         Day = "day",
         Hour = "hour",
+    }
+
+    enum Direction {
+        None = 0,
+        Left = 1,
+        Right = 2,
     }
 });
